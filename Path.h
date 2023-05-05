@@ -1,42 +1,46 @@
-#include<stdlib.h>
-
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <cstdlib>
+#include <windows.h>
+#include <fstream>
+#include <algorithm>
+#include <chrono>
 using namespace std;
 
-class Sciezka{
+class Path{
 public:
-    struct Lista_sasiadow{
-        Lista_sasiadow *nast;
-        int sasiad;
-        int waga;
+    struct List_of_neighbours{
+        List_of_neighbours *next;
+        int neighbour;
+        int wage;
     };
     const int inf = 2147483647;
 
-    Lista_sasiadow ** sasiedzi;
-    Lista_sasiadow *p, *r;
+    List_of_neighbours ** neighbours;
+    List_of_neighbours *p, *r;
 
-    int ** graf;
-    int l_krawedzi, l_wierzcholkow, wierzcholek_pocz;
-    int waga;
-    int gestosc;
-    int *poprzednik;
-    long long *koszt_dojscia;
+    int ** graph;
+    int number_of_edges, number_of_vertexes, beginning_vertex;
+    int wage;
+    int density;
+    int *previous;
+    long long *cost_to_reach;
 
-    void menu_sciezki();
-    void stworz_graf_z_pliku();
-    void wygeneruj_graf();
+    void path_menu();
+    void create_graph_from_file();
+    void generate_graph();
 
-    void wyswietl_macierz();
-    void wyswietl_liste_sasiadow();
+    void print_matrix();
+    void print_neighbours_list();
 
-    void Dijkstra_macierzowo();
-    void Dijkstra_lista();
+    void dijkstra_matrix();
+    void dijkstra_list();
 
-    void Ford_macierzowo();
-    void Ford_lista();
+    void ford_matrix();
+    void ford_list();
 
-    void wypisz_sciezki();
+    void print_paths();
 
-    void pomiar_czasu();
+    void measure_time();
 };
-
-#endif // Sciezka_H

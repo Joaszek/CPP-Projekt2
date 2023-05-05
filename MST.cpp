@@ -1,578 +1,660 @@
-#include<iostream>
 #include "MST.h"
-#include <iomanip>
-#include <bits/stdc++.h>
-#include <string>
-#include <cstdlib>
-#include <windows.h>
 
 using namespace std;
 
-void MST::menu_MST(){
+void MST::MST_menu()
+{
 
-    int opcja=-1;
+    int option = -1;
 
-        while(opcja!=0)
+    while (option != 0)
+    {
+        cout << "\nEnter option?" << endl;
+        cout << "1. Load graph from file" << endl;
+        cout << "2. Generate graph" << endl;
+        cout << "3. Find the minimum right_sonanning tree using Prim's algorithm from the list" << endl;
+        cout << "4. Find the minimum right_sonanning tree using Prim's algorithm from the matrix" << endl;
+        cout << "5. Find the minimum right_sonanning tree using rrusral's algorithm from the list" << endl;
+        cout << "6. Find the minimum right_sonanning tree using rrusral's algorithm from the matrix" << endl;
+        cout << "7. Print graph" << endl;
+        cout << "0. Exit" << endl;
+
+        cin >> option;
+
+        switch (option) // wybór opcji oraz wywo³anie odpowiedniego menu
         {
-            printf("\n\nDrogi uzytkowniku! Co chcesz zrobic?\n");
-            printf("1. Wczytac graf z pliku\n");
-            printf("2. Wygenerowac losowy graf o zadanej gestosci\n");
-            printf("3. Wyznaczyc minimalne drzewo rozpinajace algorytmem Prima z listy\n");
-            printf("4. Wyznaczyc minimalne drzewo rozpinajace algorytmem Prima z macierzy\n");
-            printf("5. Wyznaczyc minimalne drzewo rozpinajace algorytmem Kruskala z listy\n");
-            printf("6. Wyznaczyc minimalne drzewo rozpinajace algorytmem Kruskala z macierzy\n");
-            printf("7. Wyswietlic graf\n");
-            printf("0. Wyjdz z programu\n");
-
-            scanf("%i", &opcja);
-
-            switch (opcja)                                                              //wybór opcji oraz wywo³anie odpowiedniego menu
-            {
-            case 0:
-                break;
-            case 1:
-                graf = NULL;
-                sasiedzi = NULL;
-                l_wierzcholkow = 0;
-                l_krawedzi = 0;
-                stworz_graf_z_pliku();
-                wyswietl_liste_sasiadow();
-                wyswietl_macierz();
-		        break;
-            case 2:
-                graf = NULL;
-                sasiedzi = NULL;
-                l_wierzcholkow = 0;
-                l_krawedzi = 0;
-                printf("Podaj ilosc wierzcholkow w grafie, ktory chcesz wygenerowac: ");
-                    cin >> l_wierzcholkow;
-                printf("Podaj w procentach gestosc grafu, ktory chcesz wygenerowac: ");
-                    cin >> gestosc;
-                wygeneruj_graf();
-                wyswietl_liste_sasiadow();
-                wyswietl_macierz();
-                break;
-            case 3:
-                Prim_lista();
-                wyswietl_liste_sasiadow();
-                wyswietl_macierz();
-                break;
-            case 4:
-                Prim_macierzowo();
-                wyswietl_liste_sasiadow();
-                wyswietl_macierz();
-                break;
-            case 5:
-                Kruskal_lista();
-                wyswietl_liste_sasiadow();
-                wyswietl_macierz();
-                break;
-            case 6:
-                Kruskal_macierzowo();
-                wyswietl_liste_sasiadow();
-                wyswietl_macierz();
-                break;
-            case 7:
-                wyswietl_liste_sasiadow();
-                wyswietl_macierz();
-                break;
-            default:
-                printf("Podaj wlasciwa opcje."); Sleep(2000);
-                break;
-            }
-		}
-}
-void MST::stworz_graf_z_pliku(){
-
-    string nazwa_pliku;
-    int v1, v2, waga;
-
-    printf("Podaj nazwe pliku, z którego chcesz wczytac graf: ");
-    cin >> nazwa_pliku;
-    ifstream plik;                                                                  //wczytanie pliku oraz rozmiaru kopca z niego
-    plik.open(nazwa_pliku.c_str(), ios::in);
-    plik >> l_krawedzi >> l_wierzcholkow;
-
-    sasiedzi = new Lista_sasiadow *[l_krawedzi];
-
-    graf = new int *[l_wierzcholkow];
-    for(int i = 0; i < l_wierzcholkow; i++) graf[i] = new int [l_wierzcholkow];
-
-    for(int i = 0; i < l_wierzcholkow; i++) sasiedzi[i] = NULL;
-    for(int i = 0; i < l_wierzcholkow; i++) for(int j = 0; j < l_wierzcholkow; j++) graf[i][j] = 0;
-
-
-    for(int i = 0; i < l_krawedzi; i++){
-        plik >> v1 >> v2 >> waga;
-        p = new Lista_sasiadow;
-        p -> sasiad = v2;
-        p -> nast = sasiedzi [v1];
-        p -> waga = waga;
-        sasiedzi [v1] = p;
-
-        p = new Lista_sasiadow;
-        p -> sasiad = v1;
-        p -> nast = sasiedzi [v2];
-        p -> waga = waga;
-        sasiedzi [v2] = p;
-
-        graf[v1][v2] = waga;
-        graf[v2][v1] = waga;
-
+        case 0:
+            return;
+        case 1:
+            graph = NULL;
+            neighbours = NULL;
+            number_of_vertexes = 0;
+            number_of_edges = 0;
+            create_graph_from_file();
+            print_list_of_neighbours();
+            print_matrix();
+            break;
+        case 2:
+            graph = NULL;
+            neighbours = NULL;
+            number_of_vertexes = 0;
+            number_of_edges = 0;
+            cout << "Enter the number of vertices in the graph you want to generate: " << endl;
+            cin >> number_of_vertexes;
+            cout << "Enter the density(in percent) of the graph you want to generate: " << endl;
+            cin >> density;
+            generate_graph();
+            print_list_of_neighbours();
+            print_matrix();
+            break;
+        case 3:
+            prim_list();
+            print_list_of_neighbours();
+            print_matrix();
+            break;
+        case 4:
+            prim_matrix();
+            print_list_of_neighbours();
+            print_matrix();
+            break;
+        case 5:
+            kruskal_list();
+            print_list_of_neighbours();
+            print_matrix();
+            break;
+        case 6:
+            kruskal_matrix();
+            print_list_of_neighbours();
+            print_matrix();
+            break;
+        case 7:
+            print_list_of_neighbours();
+            print_matrix();
+            break;
+        default:
+            cout << "Enter correct option" << endl;
+            Sleep(2000);
+            break;
+        }
     }
 }
-void MST::wygeneruj_graf(){
+void MST::create_graph_from_file()
+{
+
+    string filename;
+    int v1, v2, wage;
+
+    cout << "Enter the name of the file: " << endl;
+    //pobieranie nazwy pliku
+    cin >> filename;
+    ifstream file;
+    //otwierami plik
+    file.open(filename.c_str(), ios::in);
+    //wstawiamy numer krawedzi i wierzcholkow
+    file >> number_of_edges >> number_of_vertexes;
+
+    //tworzymy liste sasiadow
+    neighbours = new List_of_neighbours *[number_of_edges];
+
+    graph = new int *[number_of_vertexes];
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        graph[i] = new int[number_of_vertexes];
+    }
+
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        neighbours[i] = NULL;
+    }
+
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        for (int j = 0; j < number_of_vertexes; j++)
+            graph[i][j] = 0;
+    }
+
+    for (int i = 0; i < number_of_edges; i++)
+    {
+        file >> v1 >> v2 >> wage;
+        p = new List_of_neighbours;
+        p->neighbour = v2;
+        p->next = neighbours[v1];
+        p->wage = wage;
+        neighbours[v1] = p;
+
+        p = new List_of_neighbours;
+        p->neighbour = v1;
+        p->next = neighbours[v2];
+        p->wage = wage;
+        neighbours[v2] = p;
+
+        graph[v1][v2] = wage;
+        graph[v2][v1] = wage;
+    }
+}
+void MST::generate_graph()
+{
     srand(time(NULL));
-    sasiedzi = new Lista_sasiadow *[l_wierzcholkow * (l_wierzcholkow - 1) / 2];
-    int v1, v2, waga;
-    int index_z_grafu, index_spoza_grafu;
+    neighbours = new List_of_neighbours *[number_of_vertexes * (number_of_vertexes - 1) / 2];
+    int v1, v2, wage;
+    int index_from_graph, index_out_graph;
 
-    graf = new int *[l_wierzcholkow];
-    for(int i = 0; i < l_wierzcholkow; i++) graf[i] = new int [l_wierzcholkow];
-
-    for(int i = 0; i < l_wierzcholkow; i++) sasiedzi[i] = NULL;
-    for(int i = 0; i < l_wierzcholkow; i++) for(int j = 0; j < l_wierzcholkow; j++) graf[i][j] = 0;
-    int w_grafie[l_wierzcholkow + 1];
-    int nie_w_grafie[l_wierzcholkow];
-
-    w_grafie[0] = 0;
-    for(int i = 0; i < l_wierzcholkow - 1; i++) nie_w_grafie[i] = i+1;
-
-    for(int i = 0; i < l_wierzcholkow - 1; i++){
-        index_z_grafu = rand()%(i+1);
-        index_spoza_grafu = rand()%(l_wierzcholkow - i - 1);
-        v1 = w_grafie[index_z_grafu];
-        v2 = nie_w_grafie[index_spoza_grafu];
-        waga = rand()%1000000 + 1;
-        nie_w_grafie[index_spoza_grafu] = 0;
-        w_grafie[i+1] = v2;
-        sort(nie_w_grafie, nie_w_grafie + l_wierzcholkow - i - 1, greater <int>());
-
-        graf[v1][v2] = waga;
-        graf[v2][v1] = waga;
-
-        p = new Lista_sasiadow;
-        p -> sasiad = v2;
-        p -> nast = sasiedzi [v1];
-        p -> waga = waga;
-        sasiedzi [v1] = p;
-
-        p = new Lista_sasiadow;
-        p -> sasiad = v1;
-        p -> nast = sasiedzi [v2];
-        p -> waga = waga;
-        sasiedzi [v2] = p;
+    graph = new int *[number_of_vertexes];
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        graph[i] = new int[number_of_vertexes];
     }
 
-    l_krawedzi = gestosc * l_wierzcholkow * (l_wierzcholkow - 1) / 2 / 100;
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        neighbours[i] = NULL;
+    }
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        for (int j = 0; j < number_of_vertexes; j++)
+            graph[i][j] = 0;
+    }
+    int *inside_graph = new int[number_of_vertexes + 1];
+    int *outside_graph = new int[number_of_vertexes];
 
-    for(int i = l_wierzcholkow - 1; i < l_krawedzi; i++){
-        v1 = rand()%l_wierzcholkow;
-        v2 = rand()%l_wierzcholkow;
+    inside_graph[0] = 0;
+    for (int i = 0; i < number_of_vertexes - 1; i++)
+    {
+        outside_graph[i] = i + 1;
+    }
 
-        while(v1 == v2 || graf[v1][v2] != 0 ){
-            v1 = rand()%l_wierzcholkow;
-            v2 = rand()%l_wierzcholkow;
+    for (int i = 0; i < number_of_vertexes - 1; i++)
+    {
+        index_from_graph = rand() % (i + 1);
+        index_out_graph = rand() % (number_of_vertexes - i - 1);
+        v1 = inside_graph[index_from_graph];
+        v2 = outside_graph[index_out_graph];
+        wage = rand() % 1000000 + 1;
+        outside_graph[index_out_graph] = 0;
+        inside_graph[i + 1] = v2;
+        sort(outside_graph, outside_graph + number_of_vertexes - i - 1, greater<int>());
+
+        graph[v1][v2] = wage;
+        graph[v2][v1] = wage;
+
+        p = new List_of_neighbours;
+        p->neighbour = v2;
+        p->next = neighbours[v1];
+        p->wage = wage;
+        neighbours[v1] = p;
+
+        p = new List_of_neighbours;
+        p->neighbour = v1;
+        p->next = neighbours[v2];
+        p->wage = wage;
+        neighbours[v2] = p;
+    }
+
+    number_of_edges = density * number_of_vertexes * (number_of_vertexes - 1) / 2 / 100;
+
+    for (int i = number_of_vertexes - 1; i < number_of_edges; i++)
+    {
+        v1 = rand() % number_of_vertexes;
+        v2 = rand() % number_of_vertexes;
+
+        while (v1 == v2 || graph[v1][v2] != 0)
+        {
+            v1 = rand() % number_of_vertexes;
+            v2 = rand() % number_of_vertexes;
         }
-        waga = rand()%100 + 1;
+        wage = rand() % 100 + 1;
 
-        graf[v1][v2] = waga;
-        graf[v2][v1] = waga;
+        graph[v1][v2] = wage;
+        graph[v2][v1] = wage;
 
-        p = new Lista_sasiadow;
-        p -> sasiad = v2;
-        p -> nast = sasiedzi [v1];
-        p -> waga = waga;
-        sasiedzi [v1] = p;
+        p = new List_of_neighbours;
+        p->neighbour = v2;
+        p->next = neighbours[v1];
+        p->wage = wage;
+        neighbours[v1] = p;
 
-        p = new Lista_sasiadow;
-        p -> sasiad = v1;
-        p -> nast = sasiedzi [v2];
-        p -> waga = waga;
-        sasiedzi [v2] = p;
+        p = new List_of_neighbours;
+        p->neighbour = v1;
+        p->next = neighbours[v2];
+        p->wage = wage;
+        neighbours[v2] = p;
     }
 }
-void MST::wyswietl_liste_sasiadow(){
-    for(int i = 0; i < l_wierzcholkow; i++){
-        cout << "\n" << i << " = ";
-        p = sasiedzi[i];
-        while( p ){
-            cout << setw(3) << p->sasiad << ":" << p->waga;
-            p = p->nast;
+void MST::print_list_of_neighbours()
+{
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        cout << "\n"
+             << i << " = ";
+        p = neighbours[i];
+        while (p)
+        {
+            cout << setw(3) << p->neighbour << ":" << p->wage;
+            p = p->next;
         }
     }
 }
-void MST::wyswietl_macierz(){
+void MST::print_matrix()
+{
     cout << "\n\n   ";
-    for(int i = 0; i < l_wierzcholkow; i++)
+    for (int i = 0; i < number_of_vertexes; i++)
         cout << setw(6) << i;
     cout << "\n";
-    for(int i = 0; i < l_wierzcholkow; i++){
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
         cout << setw(6) << i;
-        for(int j = 0; j < l_wierzcholkow; j++)
-            cout << setw(6) << graf[i][j];
+        for (int j = 0; j < number_of_vertexes; j++)
+            cout << setw(6) << graph[i][j];
         cout << "\n";
     }
 }
-void MST::wyswietl_mst(Krawedz mst[]){
-    cout << "Minimalne drzewo rozpinajace o wadze " << waga << ":\n";
-    for(int i = 0; i < l_wierzcholkow - 1; i++){
-        cout << mst[i].v1 << "-" << mst[i].v2 << ":" << mst[i].waga << "\n";
+void MST::print_mst(Edge mst[])
+{
+    cout << "Minimal right_sonanning tree with weight " << wage << ":\n";
+    for (int i = 0; i < number_of_vertexes - 1; i++)
+    {
+        cout << mst[i].v1 << "-" << mst[i].v2 << ":" << mst[i].wage << "\n";
     }
 }
-void MST::Prim_lista(){
-    Krawedz k;
+void MST::prim_list()
+{
+    Edge r;
     int v = 0;
-    pozycja = 0;
-    waga = 0;
+    position = 0;
+    wage = 0;
 
-    Krawedz kolejka[l_krawedzi];
-    Krawedz mst[l_wierzcholkow - 1];
-    bool *wierzcholki = new bool [ l_wierzcholkow ];
+    Edge *queue = new Edge[number_of_edges];
+    Edge *mst = new Edge[number_of_vertexes - 1];
+    bool *vertexes = new bool[number_of_vertexes];
 
-    for(int i = 0; i < l_wierzcholkow; i++)
-        wierzcholki[i] = false;
+    for (int i = 0; i < number_of_vertexes; i++)
+        vertexes[i] = false;
 
-    for(int i = 0; i < l_wierzcholkow - 1; i++){
-        wierzcholki[v] = true;
-        p = sasiedzi[v];
-        while(p){
-            if(!wierzcholki[p->sasiad]){
-                k.v1 = v;
-                k.v2 = p->sasiad;
-                k.waga = p->waga;
-                wstaw_do_kolejki(k, kolejka);
-            }
-            p = p->nast;
-        }
-        do{
-            k = korzen(kolejka);
-            usun_pierwszy_z_kolejki(kolejka);
-        }while(wierzcholki[k.v1] && wierzcholki[k.v2] );
-
-        if(wierzcholki[k.v1]){
-            v = k.v2;
-            wierzcholki[k.v2] = true;
-        }
-        else{
-            v = k.v1;
-            wierzcholki[k.v1] = true;
-        }
-        mst[i] = k;
-        waga += k.waga;
-    }
-    wyswietl_mst(mst);
-}
-void MST::Prim_macierzowo(){
-    Krawedz k;
-    int v = 0;
-    pozycja = 0;
-    waga = 0;
-
-    Krawedz kolejka[l_krawedzi];
-    Krawedz mst[l_wierzcholkow - 1];
-    bool *wierzcholki = new bool [ l_wierzcholkow ];
-
-    for(int i = 0; i < l_wierzcholkow; i++)
-        wierzcholki[i] = false;
-    for(int i = 0; i < l_wierzcholkow - 1; i++){
-        wierzcholki[v] = true;
-        for(int j = 0; j < l_wierzcholkow; j++){
-            if(!wierzcholki[j] && graf[v][j]!=0){
-                k.v1 = v;
-                k.v2 = j;
-                k.waga = graf[v][j];
-                wstaw_do_kolejki(k, kolejka);
-            }
-        }
-        do{
-            k = korzen(kolejka);
-            usun_pierwszy_z_kolejki(kolejka);
-        }while(wierzcholki[k.v1] && wierzcholki[k.v2] );
-
-        if(wierzcholki[k.v1]){
-            v = k.v2;
-            wierzcholki[k.v2] = true;
-        }
-        else{
-            v = k.v1;
-            wierzcholki[k.v1] = true;
-        }
-        mst[i] = k;
-        waga += k.waga;
-    }
-    wyswietl_mst(mst);
-}
-void MST::Kruskal_lista(){
-    Krawedz k;
-
-    Z = new Zbiory [l_wierzcholkow];
-    Krawedz kolejka[l_krawedzi];
-    Krawedz mst[l_wierzcholkow - 1];
-    waga = 0;
-    pozycja = 0;
-
-    for(int i = 0; i < l_wierzcholkow; i++)
-        stworz_zbior(i);
-    for(int i = 0; i < l_wierzcholkow; i++){
-        p = sasiedzi[i];
-        while(p){
-            if(p->sasiad >= i){
-                k.v1 = i;
-                k.v2 = p->sasiad;
-                k.waga = p->waga;
-                wstaw_do_kolejki(k, kolejka);
-            }
-            p = p->nast;
-        }
-    }
-    for(int i = 0; i < l_wierzcholkow - 1; i++){
-        do{
-            k = korzen(kolejka);
-            usun_pierwszy_z_kolejki(kolejka);
-        }while(znajdz_zbior(k.v1)==znajdz_zbior(k.v2));
-
-        mst[i] = k;
-        polacz_zbiory(k);
-        waga += k.waga;
-    }
-    wyswietl_mst(mst);                                                                                   //nienaiwna implementacja ziorów rozlacznych
-}
-void MST::Kruskal_macierzowo(){
-    Krawedz k;
-
-    Z = new Zbiory [l_wierzcholkow];
-    Krawedz kolejka[l_krawedzi];
-    Krawedz mst[l_wierzcholkow - 1];
-    waga = 0;
-    pozycja = 0;
-
-    for(int i = 0; i < l_wierzcholkow; i++)
-        stworz_zbior(i);
-    for(int i = 0; i < l_wierzcholkow; i++){
-        for(int j = i; j < l_wierzcholkow; j++){
-            if(graf[i][j] != 0){
-                k.v1 = i;
-                k.v2 = j;
-                k.waga = graf[i][j];
-                wstaw_do_kolejki(k, kolejka);
-            }
-        }
-    }
-
-    for(int i = 0; i < l_wierzcholkow - 1; i++){
-        do{
-            k = korzen(kolejka);
-            usun_pierwszy_z_kolejki_Kruskal(kolejka);
-        }while(znajdz_zbior(k.v1)==znajdz_zbior(k.v2));
-
-        mst[i] = k;
-        polacz_zbiory(k);
-        waga += k.waga;
-    }
-    wyswietl_mst(mst);
-}
-MST::Krawedz MST::korzen(Krawedz kolejka[]){
-    return kolejka[0];
-}
-void MST::wstaw_do_kolejki(Krawedz k, Krawedz kolejka[]){
-    int i, j;
-    i = pozycja++;
-    j = (i - 1) / 2;
-
-    while(i > 0 && kolejka[j].waga > k.waga){
-        kolejka[i] = kolejka[j];
-        i = j;
-        j = (i - 1)/2;
-    }
-
-    kolejka[i] = k;
-}
-void MST::usun_pierwszy_z_kolejki(Krawedz kolejka[]){
-    int sl, sp;
-    Krawedz k;
-
-    pozycja--;
-    kolejka[0] = kolejka[pozycja];
-
-    int i, j;
-    i = 0;
-    sl = 1;
-    sp = 2;
-
-    while((kolejka[i].waga > min(kolejka[sl].waga, kolejka[sp].waga)) && pozycja > 2*i)
+    for (int i = 0; i < number_of_vertexes - 1; i++)
     {
-
-        sl = 2*i + 1;
-        sp = 2*i + 2;
-        if(pozycja  == sl){
-
-            if(kolejka[sl].waga < kolejka[i].waga){
-                k = kolejka[i];
-			    kolejka[i] = kolejka[j];
-			    kolejka[j] = k;
+        vertexes[v] = true;
+        p = neighbours[v];
+        while (p)
+        {
+            if (!vertexes[p->neighbour])
+            {
+                r.v1 = v;
+                r.v2 = p->neighbour;
+                r.wage = p->wage;
+                add_to_the_queue(r, queue);
             }
-            break;
+            p = p->next;
         }
-        else{
-            if(min(kolejka[sl].waga, kolejka[sp].waga) < kolejka[i].waga){
-                if(kolejka[sl].waga <= kolejka[sp].waga)
-                    j = sl;
-                else
-                    j = sp;
+        do
+        {
+            r = root(queue);
+            delete_first_from_queue(queue);
+        } while (vertexes[r.v1] && vertexes[r.v2]);
 
-                k = kolejka[i];
-			    kolejka[i] = kolejka[j];
-			    kolejka[j] = k;
-			    i = j;
-            }
+        if (vertexes[r.v1])
+        {
+            v = r.v2;
+            vertexes[r.v2] = true;
         }
-    }
-
-}
-void MST::usun_pierwszy_z_kolejki_Kruskal(Krawedz kolejka[]){
-    int sl, sp;
-    Krawedz k;
-
-    pozycja--;
-    kolejka[0] = kolejka[pozycja];
-
-    int i, j;
-    i = 0;
-    sl = 1;
-    sp = 2;
-
-    while((kolejka[i].waga > min(kolejka[sl].waga, kolejka[sp].waga)) && pozycja >= 2*i)
-    {
-
-        sl = 2*i + 1;
-        sp = 2*i + 2;
-        if(pozycja  == sl){
-
-            if(kolejka[sl].waga < kolejka[i].waga){
-                k = kolejka[i];
-			    kolejka[i] = kolejka[j];
-			    kolejka[j] = k;
-            }
-            break;
-        }
-        else{
-            if(min(kolejka[sl].waga, kolejka[sp].waga) < kolejka[i].waga){
-                if(kolejka[sl].waga <= kolejka[sp].waga)
-                    j = sl;
-                else
-                    j = sp;
-
-                k = kolejka[i];
-			    kolejka[i] = kolejka[j];
-			    kolejka[j] = k;
-			    i = j;
-            }
-        }
-    }
-
-}
-void MST::stworz_zbior ( int v ){
-    Z [ v ].korzen   = v;
-    Z [ v ].moc = 0;
-}
-int MST::znajdz_zbior ( int v ){
-    if( Z [ v ].korzen != v )
-        Z [ v ].korzen = znajdz_zbior ( Z [ v ].korzen );
-    return Z [ v ].korzen;
-}
-void MST::polacz_zbiory ( Krawedz k ){
-    int ru, rv;
-
-    ru = znajdz_zbior ( k.v1 );   // Wyznaczamy korzeń drzewa z węzłem u
-    rv = znajdz_zbior ( k.v2 );   // Wyznaczamy korzeń drzewa z węzłem v
-    if( ru != rv )           // Korzenie muszą być różne
-    {
-        if( Z [ ru ].moc > Z [ rv ].moc ) // Porównujemy rangi drzew
-            Z [ rv ].korzen = ru;    // ru większe, dołączamy rv
         else
         {
-            Z [ ru ].korzen = rv;    // równe lub rv większe, dołączamy ru
-            if( Z [ ru ].moc == Z [ rv ].moc )
-                Z [ rv ].moc++;
+            v = r.v1;
+            vertexes[r.v1] = true;
+        }
+        mst[i] = r;
+        wage += r.wage;
+    }
+    print_mst(mst);
+}
+void MST::prim_matrix()
+{
+    Edge r;
+    int v = 0;
+    position = 0;
+    wage = 0;
+
+    Edge *queue = new Edge[number_of_edges];
+    Edge *mst = new Edge[number_of_vertexes - 1];
+    bool *vertexes = new bool[number_of_vertexes];
+
+    for (int i = 0; i < number_of_vertexes; i++)
+        vertexes[i] = false;
+    for (int i = 0; i < number_of_vertexes - 1; i++)
+    {
+        vertexes[v] = true;
+        for (int j = 0; j < number_of_vertexes; j++)
+        {
+            if (!vertexes[j] && graph[v][j] != 0)
+            {
+                r.v1 = v;
+                r.v2 = j;
+                r.wage = graph[v][j];
+                add_to_the_queue(r, queue);
+            }
+        }
+        do
+        {
+            r = root(queue);
+            delete_first_from_queue(queue);
+        } while (vertexes[r.v1] && vertexes[r.v2]);
+
+        if (vertexes[r.v1])
+        {
+            v = r.v2;
+            vertexes[r.v2] = true;
+        }
+        else
+        {
+            v = r.v1;
+            vertexes[r.v1] = true;
+        }
+        mst[i] = r;
+        wage += r.wage;
+    }
+    print_mst(mst);
+}
+void MST::kruskal_list()
+{
+    Edge edge;
+
+    Datasets *datasets = new Datasets[number_of_vertexes];
+    Edge *queue = new Edge[number_of_edges];
+    Edge *mst = new Edge[number_of_vertexes - 1];
+    wage = 0;
+    position = 0;
+
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        create_dataset(i);
+    }
+
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        p = neighbours[i];
+        while (p)
+        {
+            if (p->neighbour >= i)
+            {
+                edge.v1 = i;
+                edge.v2 = p->neighbour;
+                edge.wage = p->wage;
+                add_to_the_queue(edge, queue);
+            }
+            p = p->next;
+        }
+    }
+    for (int i = 0; i < number_of_vertexes - 1; i++)
+    {
+        do
+        {
+            edge = root(queue);
+            delete_first_from_queue(queue);
+        } while (find_dataset(edge.v1) == find_dataset(edge.v2));
+
+        mst[i] = edge;
+        connect_datasets(edge);
+        wage += edge.wage;
+    }
+    print_mst(mst); // nienaiwna implementacja ziorów rozlacznych
+}
+void MST::kruskal_matrix()
+{
+    Edge edge;
+    Datasets *datasets = new Datasets[number_of_vertexes];
+    Edge *queue = new Edge[number_of_edges];
+    Edge *mst = new Edge[number_of_vertexes - 1];
+    wage = 0;
+    position = 0;
+
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        create_dataset(i);
+    }
+
+    for (int i = 0; i < number_of_vertexes; i++)
+    {
+        for (int j = i; j < number_of_vertexes; j++)
+        {
+            if (graph[i][j] != 0)
+            {
+                edge.v1 = i;
+                edge.v2 = j;
+                edge.wage = graph[i][j];
+                add_to_the_queue(edge, queue);
+            }
+        }
+    }
+
+    for (int i = 0; i < number_of_vertexes - 1; i++)
+    {
+        do
+        {
+            edge = root(queue);
+            delete_first_from_queue_Kruskal(queue);
+        } while (find_dataset(edge.v1) == find_dataset(edge.v2));
+
+        mst[i] = edge;
+        connect_datasets(edge);
+        wage += edge.wage;
+    }
+    print_mst(mst);
+}
+MST::Edge MST::root(Edge queue[])
+{
+    return queue[0];
+}
+void MST::add_to_the_queue(Edge r, Edge queue[])
+{
+    int i, j;
+    i = position++;
+    j = (i - 1) / 2;
+
+    while (i > 0 && queue[j].wage > r.wage)
+    {
+        queue[i] = queue[j];
+        i = j;
+        j = (i - 1) / 2;
+    }
+
+    queue[i] = r;
+}
+void MST::delete_first_from_queue(Edge queue[])
+{
+    int left_son, right_son;
+    Edge r;
+
+    position--;
+    queue[0] = queue[position];
+
+    int i, j;
+    i = 0;
+    left_son = 1;
+    right_son = 2;
+
+    while ((queue[i].wage > min(queue[left_son].wage, queue[right_son].wage)) && position > 2 * i)
+    {
+
+        left_son = 2 * i + 1;
+        right_son = 2 * i + 2;
+        if (position == left_son)
+        {
+
+            if (queue[left_son].wage < queue[i].wage)
+            {
+                r = queue[i];
+                queue[i] = queue[j];
+                queue[j] = r;
+            }
+            break;
+        }
+        else
+        {
+            if (min(queue[left_son].wage, queue[right_son].wage) < queue[i].wage)
+            {
+                if (queue[left_son].wage <= queue[right_son].wage)
+                    j = left_son;
+                else
+                    j = right_son;
+
+                r = queue[i];
+                queue[i] = queue[j];
+                queue[j] = r;
+                i = j;
+            }
         }
     }
 }
-void MST::pomiar_czasu(){
+void MST::delete_first_from_queue_Kruskal(Edge queue[])
+{
+    int left_son, right_son;
+    Edge r;
 
-    int wielkosc[21][2] = { {10, 20}, {10, 60}, {10, 99}, {25, 20}, {25, 60}, {25, 99}, {50, 20}, {50, 60}, {50, 99},
-                            {75, 20}, {75, 60}, {75, 99}, {100, 20}, {100, 60}, {100, 99}, {150, 20}, {150, 60}, {150, 99}, {200, 20}, {200, 60}, {200, 99}};
+    position--;
+    queue[0] = queue[position];
 
-    for(int i = 0; i < 21; i++){
+    int i, j;
+    i = 0;
+    left_son = 1;
+    right_son = 2;
 
-        l_wierzcholkow = wielkosc[i][0];
-        gestosc = wielkosc[i][1];
+    while ((queue[i].wage > min(queue[left_son].wage, queue[right_son].wage)) && position >= 2 * i)
+    {
 
-        string nazwa;
+        left_son = 2 * i + 1;
+        right_son = 2 * i + 2;
+        if (position == left_son)
+        {
+
+            if (queue[left_son].wage < queue[i].wage)
+            {
+                r = queue[i];
+                queue[i] = queue[j];
+                queue[j] = r;
+            }
+            break;
+        }
+        else
+        {
+            if (min(queue[left_son].wage, queue[right_son].wage) < queue[i].wage)
+            {
+                if (queue[left_son].wage <= queue[right_son].wage)
+                    j = left_son;
+                else
+                    j = right_son;
+
+                r = queue[i];
+                queue[i] = queue[j];
+                queue[j] = r;
+                i = j;
+            }
+        }
+    }
+}
+void MST::create_dataset(int v)
+{
+    datasets[v].root = v;
+    datasets[v].power = 0;
+}
+int MST::find_dataset(int v)
+{
+    if (datasets[v].root != v)
+        datasets[v].root = find_dataset(datasets[v].root);
+    return datasets[v].root;
+}
+void MST::connect_datasets(Edge r)
+{
+    int ru, rv;
+
+    ru = find_dataset(r.v1); // Wyznaczamy rorzeń drzewa z węzłem u
+    rv = find_dataset(r.v2); // Wyznaczamy rorzeń drzewa z węzłem v
+    if (ru != rv)            // rootie muszą być różne
+    {
+        if (datasets[ru].power > datasets[rv].power) // Porównujemy rangi drzew
+            datasets[rv].root = ru;                  // ru więrsze, dołączamy rv
+        else
+        {
+            datasets[ru].root = rv; // równe lub rv więrsze, dołączamy ru
+            if (datasets[ru].power == datasets[rv].power)
+                datasets[rv].power++;
+        }
+    }
+}
+void MST::measure_time()
+{
+
+    int wielrosc[21][2] = {{10, 20}, {10, 60}, {10, 99}, {25, 20}, {25, 60}, {25, 99}, {50, 20}, {50, 60}, {50, 99}, {75, 20}, {75, 60}, {75, 99}, {100, 20}, {100, 60}, {100, 99}, {150, 20}, {150, 60}, {150, 99}, {200, 20}, {200, 60}, {200, 99}};
+
+    for (int i = 0; i < 21; i++)
+    {
+
+        number_of_vertexes = wielrosc[i][0];
+        density = wielrosc[i][1];
+
+        string filename;
         string txt = ".txt";
-        string podkreslnik = "_";
-        string rozmiar, gest;
-        rozmiar = to_string(l_wierzcholkow);
-        gest = to_string(gestosc);
-        nazwa = "MST_PrimLista_";
-        nazwa = nazwa + rozmiar + podkreslnik + gest + txt;                                                 //stworzenie nazwy pliku
+        string floor = "_";
+        string size, density_to_string;
+        size = to_string(number_of_vertexes);
+        density_to_string = to_string(density);
+        filename = "MST_PrimList_";
+        filename = filename + size + floor + density_to_string + txt; // stworzenie nazwy pliru
 
         ofstream fout;
-        fout.open(nazwa);
+        fout.open(filename);
         srand(time(NULL));
 
-        for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
+        for (int i = 0; i < 50; i++) // pomiar czasu operacji
         {
-            wygeneruj_graf();
+            generate_graph();
+            auto begin = chrono::steady_clock::now();
+            prim_list();
+            auto end = chrono::steady_clock::now();
+            fout << chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
+        }
+        fout.close();
+
+        filename = "MST_PrimMatrix_";
+        filename = filename + size + floor + density_to_string + txt;
+        fout.open(filename);
+        srand(time(NULL));
+
+        for (int i = 0; i < 50; i++) // pomiar czasu operacji
+        {
+            generate_graph();
             auto begin = std::chrono::steady_clock::now();
-            Prim_lista();
+            prim_matrix();
             auto end = std::chrono::steady_clock::now();
             fout << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
         }
         fout.close();
 
-        nazwa = "MST_PrimMacierz_";
-        nazwa = nazwa + rozmiar + podkreslnik + gest + txt;
-        fout.open(nazwa);
+        filename = "MST_rrusralLista_";
+        filename = filename + size + floor + density_to_string + txt;
+        fout.open(filename);
         srand(time(NULL));
 
-        for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
+        for (int i = 0; i < 50; i++) // pomiar czasu operacji
         {
-            wygeneruj_graf();
-            auto begin = std::chrono::steady_clock::now();
-            Prim_macierzowo();
-            auto end = std::chrono::steady_clock::now();
-            fout << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
+            generate_graph();
+            auto begin = chrono::steady_clock::now();
+            kruskal_list();
+            auto end = chrono::steady_clock::now();
+            fout << chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
         }
         fout.close();
 
-        nazwa = "MST_KruskalLista_";
-        nazwa = nazwa + rozmiar + podkreslnik + gest + txt;
-        fout.open(nazwa);
+        filename = "MST_KruskalMatrix_";
+        filename = filename + size + floor + density_to_string + txt;
+        fout.open(filename);
         srand(time(NULL));
 
-        for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
+        for (int i = 0; i < 50; i++) // pomiar czasu operacji
         {
-            wygeneruj_graf();
-            auto begin = std::chrono::steady_clock::now();
-            Kruskal_lista();
-            auto end = std::chrono::steady_clock::now();
-            fout << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
-        }
-        fout.close();
-
-        nazwa = "MST_KruskalMacierz_";
-        nazwa = nazwa + rozmiar + podkreslnik + gest + txt;
-        fout.open(nazwa);
-        srand(time(NULL));
-
-        for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
-        {
-            wygeneruj_graf();
-            auto begin = std::chrono::steady_clock::now();
-            Kruskal_macierzowo();
-            auto end = std::chrono::steady_clock::now();
-            fout << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
+            generate_graph();
+            auto begin = chrono::steady_clock::now();
+            kruskal_matrix();
+            auto end = chrono::steady_clock::now();
+            fout << chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
         }
         fout.close();
     }

@@ -1,54 +1,59 @@
-#include<stdlib.h>
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <fstream>
+#include <cstdlib>
+#include <chrono> 
+#include <algorithm>
+#include <windows.h>
 
 using namespace std;
 
 class MST{
 public:
-    struct Krawedz{
-        int v1, v2, waga;
+    struct Edge{
+        int v1, v2, wage;
     };
-    struct Lista_sasiadow{
-        Lista_sasiadow *nast;
-        int sasiad;
-        int waga;
+    struct List_of_neighbours{
+        List_of_neighbours *next;
+        int neighbour;
+        int wage;
     };
-    struct Zbiory{
-        int korzen, moc;
+    struct Datasets{
+        int root, power;
     };
 
-    Lista_sasiadow ** sasiedzi;
-    Lista_sasiadow *p;
+    List_of_neighbours ** neighbours;
+    List_of_neighbours *p;
 
-    Zbiory *Z;
-    int ** graf;
-    int l_krawedzi, l_wierzcholkow, pozycja;
-    int waga;
-    int gestosc;
+    Datasets *datasets;
+    int ** graph;
+    int number_of_edges, number_of_vertexes, position;
+    int wage;
+    int density;
 
-    void menu_MST();
-    void stworz_graf_z_pliku();
-    void wygeneruj_graf();
+    void MST_menu();
+    void create_graph_from_file();
+    void generate_graph();
 
-    void wyswietl_macierz();
-    void wyswietl_liste_sasiadow();
-    void wyswietl_mst(Krawedz mst[]);
+    void print_matrix();
+    void print_list_of_neighbours();
+    void print_mst(Edge mst[]);
 
-    void Prim_macierzowo();
-    void Prim_lista();
+    void prim_matrix();
+    void prim_list();
 
-    void Kruskal_macierzowo();
-    void Kruskal_lista();
+    void kruskal_matrix();
+    void kruskal_list();
 
-    Krawedz korzen(Krawedz kolejka[]);
-    void wstaw_do_kolejki( Krawedz k, Krawedz kolejka[]);
-    void usun_pierwszy_z_kolejki(Krawedz kolejka[]);
-    void usun_pierwszy_z_kolejki_Kruskal(Krawedz kolejka[]);
+    Edge root(Edge queue[]);
+    void add_to_the_queue( Edge k, Edge queue[]);
+    void delete_first_from_queue(Edge queue[]);
+    void delete_first_from_queue_Kruskal(Edge queue[]);
 
-    void stworz_zbior(int v);
-    int znajdz_zbior(int v);
-    void polacz_zbiory(Krawedz k);
+    void create_dataset(int v);
+    int find_dataset(int v);
+    void connect_datasets(Edge k);
 
-    void pomiar_czasu();
+    void measure_time();
 };
-
-#endif // MST_H
