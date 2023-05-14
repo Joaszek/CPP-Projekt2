@@ -14,8 +14,8 @@ void MST::MST_menu()
         cout << "2. Generate graph" << endl;
         cout << "3. Find the minimum right_sonanning tree using Prim's algorithm from the list" << endl;
         cout << "4. Find the minimum right_sonanning tree using Prim's algorithm from the matrix" << endl;
-        cout << "5. Find the minimum right_sonanning tree using rrusral's algorithm from the list" << endl;
-        cout << "6. Find the minimum right_sonanning tree using rrusral's algorithm from the matrix" << endl;
+        cout << "5. Find the minimum right_sonanning tree using Krusral's algorithm from the list" << endl;
+        cout << "6. Find the minimum right_sonanning tree using Krusral's algorithm from the matrix" << endl;
         cout << "7. Print graph" << endl;
         cout << "0. Exit" << endl;
 
@@ -88,7 +88,7 @@ void MST::create_graph_from_file()
     //pobieranie nazwy pliku
     cin >> filename;
     ifstream file;
-    //otwierami plik
+    //otwieranie pliku
     file.open(filename.c_str(), ios::in);
     //wstawiamy numer krawedzi i wierzcholkow
     file >> number_of_edges >> number_of_vertexes;
@@ -96,23 +96,27 @@ void MST::create_graph_from_file()
     //tworzymy liste sasiadow
     neighbours = new List_of_neighbours *[number_of_edges];
 
+    //tworzymy graf
     graph = new int *[number_of_vertexes];
+    //dla kazdego wierzcholka ustawiamy tablice krawedzi 
     for (int i = 0; i < number_of_vertexes; i++)
     {
         graph[i] = new int[number_of_vertexes];
     }
-
+    //ustawiamy każdą wartość na null
     for (int i = 0; i < number_of_vertexes; i++)
     {
         neighbours[i] = NULL;
     }
-
+    //zerujemy każdą krawędź
     for (int i = 0; i < number_of_vertexes; i++)
     {
-        for (int j = 0; j < number_of_vertexes; j++)
+        for (int j = 0; j < number_of_vertexes; j++){
             graph[i][j] = 0;
+        }
     }
 
+    //ustawiamy krawędźie
     for (int i = 0; i < number_of_edges; i++)
     {
         file >> v1 >> v2 >> wage;
@@ -139,25 +143,34 @@ void MST::generate_graph()
     int v1, v2, wage;
     int index_from_graph, index_out_graph;
 
+    //deklarujemy graf
     graph = new int *[number_of_vertexes];
+
+    //ustawiamy liste
     for (int i = 0; i < number_of_vertexes; i++)
     {
         graph[i] = new int[number_of_vertexes];
     }
-
+    //ustawiamy nulle
     for (int i = 0; i < number_of_vertexes; i++)
     {
         neighbours[i] = NULL;
     }
+
+    //ustawiamy wartosc zero dla wszystkich krawedzi
     for (int i = 0; i < number_of_vertexes; i++)
     {
-        for (int j = 0; j < number_of_vertexes; j++)
+        for (int j = 0; j < number_of_vertexes; j++){
             graph[i][j] = 0;
+        }
+            
     }
+    //deklarujemy pomocnicze zmienne
     int *inside_graph = new int[number_of_vertexes + 1];
     int *outside_graph = new int[number_of_vertexes];
 
     inside_graph[0] = 0;
+    //????
     for (int i = 0; i < number_of_vertexes - 1; i++)
     {
         outside_graph[i] = i + 1;
@@ -224,8 +237,7 @@ void MST::print_list_of_neighbours()
 {
     for (int i = 0; i < number_of_vertexes; i++)
     {
-        cout << "\n"
-             << i << " = ";
+        cout << "\n" << i << " = ";
         p = neighbours[i];
         while (p)
         {
@@ -237,15 +249,18 @@ void MST::print_list_of_neighbours()
 void MST::print_matrix()
 {
     cout << "\n\n   ";
-    for (int i = 0; i < number_of_vertexes; i++)
+    for (int i = 0; i < number_of_vertexes; i++){
         cout << setw(6) << i;
-    cout << "\n";
+    }
+        
+    cout << endl;
     for (int i = 0; i < number_of_vertexes; i++)
     {
         cout << setw(6) << i;
-        for (int j = 0; j < number_of_vertexes; j++)
+        for (int j = 0; j < number_of_vertexes; j++){
             cout << setw(6) << graph[i][j];
-        cout << "\n";
+        }
+        cout << endl;
     }
 }
 void MST::print_mst(Edge mst[])
@@ -258,98 +273,134 @@ void MST::print_mst(Edge mst[])
 }
 void MST::prim_list()
 {
-    Edge r;
+    //tworzymy pomocnicze zmienne
+    //krawedz
+    Edge edge;
+    //indeks wierzcholka
     int v = 0;
+    //pozycja
     position = 0;
+    //waga
     wage = 0;
 
+    //deklarujemy kolejke
     Edge *queue = new Edge[number_of_edges];
+    //deklarujemy drzewo
     Edge *mst = new Edge[number_of_vertexes - 1];
+    //deklarujemy tablice booli sprawdzających czy wierzcholek jest wolny
     bool *vertexes = new bool[number_of_vertexes];
 
-    for (int i = 0; i < number_of_vertexes; i++)
+    //ustawiamy poczatkowe wartosci
+    for (int i = 0; i < number_of_vertexes; i++){
         vertexes[i] = false;
-
+    }
+        
+    //dla każdego wierzcholka poza ostatnim poniewaz
+    //poniewaz ilosc wierzcholkow = ilosc krawedzi - 1 w mst 
     for (int i = 0; i < number_of_vertexes - 1; i++)
     {
+        //ustawiamy na true, poniewaz jestesmy w nim obecnie
         vertexes[v] = true;
+        //ustawiamy liste sasiadow
         p = neighbours[v];
+
         while (p)
         {
+            //jezeli nie jest sasiadem
+            //to ustawiamy wartosci i dodajemy do kolejki krawedzi
             if (!vertexes[p->neighbour])
             {
-                r.v1 = v;
-                r.v2 = p->neighbour;
-                r.wage = p->wage;
-                add_to_the_queue(r, queue);
+                edge.v1 = v;
+                edge.v2 = p->neighbour;
+                edge.wage = p->wage;
+                add_to_the_queue(edge, queue);
             }
+            //przechodzimy do nastepnego
             p = p->next;
         }
+
+        //szuka krawędzi której przynajmniej jeden koniec nie należy do dzrewa
         do
         {
-            r = root(queue);
+            edge = root(queue);
             delete_first_from_queue(queue);
-        } while (vertexes[r.v1] && vertexes[r.v2]);
+        } while (vertexes[edge.v1] && vertexes[edge.v2]);
 
-        if (vertexes[r.v1])
+        //jak znalazlo to ustawia wartosci
+        if (vertexes[edge.v1])
         {
-            v = r.v2;
-            vertexes[r.v2] = true;
+            v = edge.v2;
+            vertexes[edge.v2] = true;
         }
         else
         {
-            v = r.v1;
-            vertexes[r.v1] = true;
+            v = edge.v1;
+            vertexes[edge.v1] = true;
         }
-        mst[i] = r;
-        wage += r.wage;
+        mst[i] = edge;
+        wage += edge.wage;
     }
+    //wyswietlanie drzewa
     print_mst(mst);
 }
 void MST::prim_matrix()
 {
-    Edge r;
+    //Tworzymy krawedz
+    Edge edge;
+    //index wierzcholka
     int v = 0;
+    //pozycja
     position = 0;
+    //waga
     wage = 0;
 
+    //tworzymy kolejke
     Edge *queue = new Edge[number_of_edges];
+    //tworzymy drzewo
     Edge *mst = new Edge[number_of_vertexes - 1];
+    //tworzymy tablice ktora bedzie mowic czy wierzcholek zawiera sie juz w drzewie
     bool *vertexes = new bool[number_of_vertexes];
 
-    for (int i = 0; i < number_of_vertexes; i++)
+    //ustawiamy tablice
+    for (int i = 0; i < number_of_vertexes; i++){
         vertexes[i] = false;
+    }
+    
+    //przechodzimy po kazdym wierzcholku poza ostatnim
     for (int i = 0; i < number_of_vertexes - 1; i++)
     {
+        //ustawiamy na odwiedzony
         vertexes[v] = true;
+
+        
         for (int j = 0; j < number_of_vertexes; j++)
         {
             if (!vertexes[j] && graph[v][j] != 0)
             {
-                r.v1 = v;
-                r.v2 = j;
-                r.wage = graph[v][j];
-                add_to_the_queue(r, queue);
+                edge.v1 = v;
+                edge.v2 = j;
+                edge.wage = graph[v][j];
+                add_to_the_queue(edge, queue);
             }
         }
         do
         {
-            r = root(queue);
+            edge = root(queue);
             delete_first_from_queue(queue);
-        } while (vertexes[r.v1] && vertexes[r.v2]);
+        } while (vertexes[edge.v1] && vertexes[edge.v2]);
 
-        if (vertexes[r.v1])
+        if (vertexes[edge.v1])
         {
-            v = r.v2;
-            vertexes[r.v2] = true;
+            v = edge.v2;
+            vertexes[edge.v2] = true;
         }
         else
         {
-            v = r.v1;
-            vertexes[r.v1] = true;
+            v = edge.v1;
+            vertexes[edge.v1] = true;
         }
-        mst[i] = r;
-        wage += r.wage;
+        mst[i] = edge;
+        wage += edge.wage;
     }
     print_mst(mst);
 }
@@ -565,8 +616,8 @@ void MST::connect_datasets(Edge r)
 {
     int ru, rv;
 
-    ru = find_dataset(r.v1); // Wyznaczamy rorzeń drzewa z węzłem u
-    rv = find_dataset(r.v2); // Wyznaczamy rorzeń drzewa z węzłem v
+    ru = find_dataset(r.v1); // Wyznaczamy korzeń drzewa z węzłem u
+    rv = find_dataset(r.v2); // Wyznaczamy korzeń drzewa z węzłem v
     if (ru != rv)            // rootie muszą być różne
     {
         if (datasets[ru].power > datasets[rv].power) // Porównujemy rangi drzew
@@ -582,13 +633,13 @@ void MST::connect_datasets(Edge r)
 void MST::measure_time()
 {
 
-    int wielrosc[21][2] = {{10, 20}, {10, 60}, {10, 99}, {25, 20}, {25, 60}, {25, 99}, {50, 20}, {50, 60}, {50, 99}, {75, 20}, {75, 60}, {75, 99}, {100, 20}, {100, 60}, {100, 99}, {150, 20}, {150, 60}, {150, 99}, {200, 20}, {200, 60}, {200, 99}};
+    int wielkosc[21][2] = {{10, 20}, {10, 60}, {10, 99}, {25, 20}, {25, 60}, {25, 99}, {50, 20}, {50, 60}, {50, 99}, {75, 20}, {75, 60}, {75, 99}, {100, 20}, {100, 60}, {100, 99}, {150, 20}, {150, 60}, {150, 99}, {200, 20}, {200, 60}, {200, 99}};
 
     for (int i = 0; i < 21; i++)
     {
 
-        number_of_vertexes = wielrosc[i][0];
-        density = wielrosc[i][1];
+        number_of_vertexes = wielkosc[i][0];
+        density = wielkosc[i][1];
 
         string filename;
         string txt = ".txt";
