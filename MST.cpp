@@ -178,48 +178,72 @@ void MST::generate_graph()
 
     for (int i = 0; i < number_of_vertexes - 1; i++)
     {
+        //losujemy dwa indexy z wierzcholkow ktore sa w grafie i z tych ktore nie 
         index_from_graph = rand() % (i + 1);
         index_out_graph = rand() % (number_of_vertexes - i - 1);
+
+        //przypisujemy je odpowiednio do v1 i v2
         v1 = inside_graph[index_from_graph];
         v2 = outside_graph[index_out_graph];
+
+        //ustawiamy wage
         wage = rand() % 1000000 + 1;
+
+        //przypisujemy wartosc 0
         outside_graph[index_out_graph] = 0;
+
+        //ustawiamy wierzcholek
         inside_graph[i + 1] = v2;
+
+        //sortujemy
         sort(outside_graph, outside_graph + number_of_vertexes - i - 1, greater<int>());
 
+        //ustawiamy wage
         graph[v1][v2] = wage;
         graph[v2][v1] = wage;
 
+        //???
+        //stworzenie nowej listy sasiadow
         p = new List_of_neighbours;
         p->neighbour = v2;
         p->next = neighbours[v1];
         p->wage = wage;
         neighbours[v1] = p;
 
+        //stworzenie nowej listy sasiadow
         p = new List_of_neighbours;
         p->neighbour = v1;
         p->next = neighbours[v2];
         p->wage = wage;
         neighbours[v2] = p;
     }
-
+    
+    //losujemy ilosc krawedzi
     number_of_edges = density * number_of_vertexes * (number_of_vertexes - 1) / 2 / 100;
 
+    //dopasowywujemy krawedzie
     for (int i = number_of_vertexes - 1; i < number_of_edges; i++)
     {
+        //losujemy wierzcholki
         v1 = rand() % number_of_vertexes;
         v2 = rand() % number_of_vertexes;
 
+        //dopoki wylosowal te same wierzcholki lub juz istnieje krawedz pomiedzy nimi
+        //to losuje jeszcze raz
         while (v1 == v2 || graph[v1][v2] != 0)
         {
             v1 = rand() % number_of_vertexes;
             v2 = rand() % number_of_vertexes;
         }
+
+        //losujemy wage
         wage = rand() % 100 + 1;
 
+        //ustawiamy wage
         graph[v1][v2] = wage;
         graph[v2][v1] = wage;
 
+        //tworzymy liste sasiadow
         p = new List_of_neighbours;
         p->neighbour = v2;
         p->next = neighbours[v1];
