@@ -7,17 +7,16 @@
 #include <algorithm>
 #include <windows.h>
 
-using namespace std;
 
 class MST{
 public:
     struct Edge{
-        int v1, v2, wage;
+        int v1, v2, weight;
     };
     struct List_of_neighbours{
         List_of_neighbours *next;
         int neighbour;
-        int wage;
+        int weight;
     };
     struct Datasets{
         int root, power;
@@ -29,7 +28,7 @@ public:
     Datasets *datasets;
     int ** graph;
     int number_of_edges, number_of_vertexes, position;
-    int wage;
+    int weight;
     int density;
 
     void MST_menu();
