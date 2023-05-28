@@ -10,6 +10,7 @@ using namespace std;
 
 class Path{
 public:
+//
     struct Neighbour{
         Neighbour *next;
         int neighbour;
