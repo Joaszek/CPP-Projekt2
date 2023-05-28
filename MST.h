@@ -3,7 +3,6 @@
 #include <string>
 #include <fstream>
 #include <cstdlib>
-#include <chrono> 
 #include <algorithm>
 #include <windows.h>
 
@@ -42,17 +41,14 @@ public:
     void prim_matrix();
     void prim_list();
 
-    void kruskal_matrix();
-    void kruskal_list();
 
     Edge root(Edge queue[]);
-    void add_to_the_queue( Edge k, Edge queue[]);
+    void add_to_the_queue( Edge edge, Edge queue[]);
     void delete_first_from_queue(Edge queue[]);
-    void delete_first_from_queue_Kruskal(Edge queue[]);
 
     void create_dataset(int v);
     int find_dataset(int v);
-    void connect_datasets(Edge k);
-
+    void connect_datasets(Edge edge);
+    void delete_first_from_queue_Kruskal(Edge queue[]);
     void measure_time();
 };
