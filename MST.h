@@ -12,8 +12,8 @@ public:
     struct Edge{
         int v1, v2, weight;
     };
-    struct List_of_neighbours{
-        List_of_neighbours *next;
+    struct Neighbour{
+        Neighbour *next;
         int neighbour;
         int weight;
     };
@@ -21,8 +21,8 @@ public:
         int root, power;
     };
 
-    List_of_neighbours ** neighbours;
-    List_of_neighbours *p;
+    Neighbour ** neighbours;
+    Neighbour *p;
 
     Datasets *datasets;
     int ** graph;
