@@ -281,7 +281,7 @@ void MST::print_matrix()
 }
 void MST::print_mst(Edge mst[])
 {
-    cout << "Minimal right spnanning tree with weight " << weight << ":\n";
+    cout << "Minimal right spanning tree with weight " << weight << ":\n";
     for (int i = 0; i < number_of_vertexes - 1; i++)
     {
         cout << mst[i].v1 << "-" << mst[i].v2 << ":" << mst[i].weight << "\n";
@@ -359,7 +359,7 @@ void MST::prim_list()
         weight += edge.weight;
     }
     //wyswietlanie drzewa
-    print_mst(mst);
+    //print_mst(mst);
 }
 void MST::prim_matrix()
 {
@@ -430,7 +430,7 @@ void MST::prim_matrix()
         weight += edge.weight;
     }
     //wyswietlamy na ekranie
-    print_mst(mst);
+    //print_mst(mst);
 }
 
 void MST::kruskal_list()
@@ -491,7 +491,7 @@ void MST::kruskal_list()
         connect_datasets(edge);
         weight += edge.weight;
     }
-    print_mst(mst); 
+    //print_mst(mst); 
 }
 void MST::kruskal_matrix()
 {
@@ -541,7 +541,7 @@ void MST::kruskal_matrix()
         connect_datasets(edge);
         weight += edge.weight;
     }
-    print_mst(mst);
+    //print_mst(mst);
 }
 
 //zwraca najmnniejsza wartosc
@@ -724,9 +724,10 @@ void MST::connect_datasets(Edge edge)
 }
 
 void MST::measure_time() {
-    int data[21][2] = { {10, 20}, {10, 60}, {10, 99}, {25, 20}, {25, 60}, {25, 99}, {50, 20}, {50, 60}, {50, 99},
-                        {75, 20}, {75, 60}, {75, 99}, {100, 20}, {100, 60}, {100, 99}, {150, 20}, {150, 60}, {150, 99}, {200, 20}, {200, 60}, {200, 99}};
-    for(int i=0;i<21;i++){
+    int data[20][2] = { {10, 10}, {10, 20}, {10, 40}, {10, 80}, {10, 99}, {20, 10}, {20, 20}, {20, 40}, {20, 80}, {20, 99},
+                        {40, 10}, {40, 20}, {40, 40}, {40, 80}, {40, 99}, {80, 10}, {80, 20}, {80, 40}, {80, 80}, {80, 99}};
+    for(int i=0;i<20;i++){
+        cout << "i: "<<i<<endl;
         number_of_vertexes = data[i][0];
         density = data[i][1];
 
@@ -740,7 +741,7 @@ void MST::measure_time() {
             auto begin = std::chrono::steady_clock::now();
             prim_list();
             auto end = std::chrono::steady_clock::now();
-            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
+            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
         }
         file_out.close();
         /////////////////////////////////
@@ -752,7 +753,7 @@ void MST::measure_time() {
             auto begin = std::chrono::steady_clock::now();
             prim_matrix();
             auto end = std::chrono::steady_clock::now();
-            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
+            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
         }
         file_out.close();
         ///////////////////////////////////
@@ -764,7 +765,7 @@ void MST::measure_time() {
             auto begin = std::chrono::steady_clock::now();
             kruskal_list();
             auto end = std::chrono::steady_clock::now();
-            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
+            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
         }
         file_out.close();
         ////////////////////////////////////
@@ -776,8 +777,9 @@ void MST::measure_time() {
             auto begin = std::chrono::steady_clock::now();
             kruskal_matrix();
             auto end = std::chrono::steady_clock::now();
-            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << " ";
+            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
         }
         file_out.close();
     }
+    cout << "Ended"<<endl;
 }

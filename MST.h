@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstdlib>
 #include <algorithm>
+#include <chrono>
 #include <windows.h>
 
 
@@ -46,7 +47,8 @@ public:
     Edge root(Edge queue[]);
     void add_to_the_queue( Edge edge, Edge queue[]);
     void delete_first_from_queue(Edge queue[]);
-
+    void kruskal_list();
+    void kruskal_matrix();
     void create_dataset(int v);
     int find_dataset(int v);
     void connect_datasets(Edge edge);
