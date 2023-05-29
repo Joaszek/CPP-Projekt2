@@ -724,17 +724,20 @@ void MST::connect_datasets(Edge edge)
 }
 
 void MST::measure_time() {
-    int data[20][2] = { {10, 10}, {10, 20}, {10, 40}, {10, 80}, {10, 99}, {20, 10}, {20, 20}, {20, 40}, {20, 80}, {20, 99},
-                        {40, 10}, {40, 20}, {40, 40}, {40, 80}, {40, 99}, {80, 10}, {80, 20}, {80, 40}, {80, 80}, {80, 99}};
-    for(int i=0;i<20;i++){
-        cout << "i: "<<i<<endl;
-        number_of_vertexes = data[i][0];
-        density = data[i][1];
+    int data[10][2] = {{80, 80}, {40, 20}, {40, 40}, {40, 80}, {40, 99}, {80, 10}, {80, 20}, {80, 40}, {80, 80}, {80, 99}};
+    for(int j=0;j<10;j++){
 
+        cout << "j: "<<j<<endl;
+        number_of_vertexes = data[j][0];
+        density = data[j][1];
+        fstream file_out;    
         string filename = "Prim_List_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
-        ofstream file_out;
-        file_out.open(filename);
+
+        try{
+        
+        file_out.open(filename, ios::out);
         srand(time(NULL));
+        cout << "przed petla" <<endl;
         for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
         {
             generate_graph();
@@ -743,10 +746,18 @@ void MST::measure_time() {
             auto end = std::chrono::steady_clock::now();
             file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
         }
-        file_out.close();
+        cout << "prim list"<<endl;
+        delete graph;
+        delete neighbours;
+        delete p;
+        delete datasets;
+        file_out.close();}
+        catch(error_code r){
+            cout << r <<endl;
+        }
         /////////////////////////////////
         filename = "Prim_Matrix_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
-        file_out.open(filename);
+        file_out.open(filename, ios::out);
         for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
         {
             generate_graph();
@@ -755,10 +766,15 @@ void MST::measure_time() {
             auto end = std::chrono::steady_clock::now();
             file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
         }
+        cout << "prim matrix"<<endl;
+        delete graph;
+        delete neighbours;
+        delete p;
+        delete datasets;
         file_out.close();
         ///////////////////////////////////
-        filename = "Kruskal_List_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
-        file_out.open(filename);
+        try{filename = "Kruskal_List_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
+        file_out.open(filename, ios::out);
         for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
         {
             generate_graph();
@@ -767,10 +783,20 @@ void MST::measure_time() {
             auto end = std::chrono::steady_clock::now();
             file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
         }
+        cout << "kruskal list" <<endl;
+        delete graph;
+        delete neighbours;
+        delete p;
+        delete datasets;
         file_out.close();
+        }
+        catch(error_code r){
+            cout << r <<endl;
+        }
         ////////////////////////////////////
-        filename = "Kruskal_Matrix_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
-        file_out.open(filename);
+        try{
+            filename = "Kruskal_Matrix_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
+        file_out.open(filename, ios::out);
         for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
         {
             generate_graph();
@@ -778,8 +804,17 @@ void MST::measure_time() {
             kruskal_matrix();
             auto end = std::chrono::steady_clock::now();
             file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
+            
         }
+        cout << "kruskal matrix" <<endl;
+        delete graph;
+        delete neighbours;
+        delete p;
+        delete datasets;
         file_out.close();
+        }catch(error_code r){
+            cout << r<<endl;
+        }
     }
     cout << "Ended"<<endl;
 }
