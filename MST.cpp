@@ -18,24 +18,22 @@ void MST::MST_menu()
         cout << "5. Find the minimum right_spanning tree using Krusral's algorithm from the list" <<   endl;
         cout << "6. Find the minimum right_spanning tree using Krusral's algorithm from the matrix" << endl;
         cout << "7. Print graph" << endl;
-        cout << "0. Exit" <<    endl;
+        cout << "8. Exit" <<    endl;
 
         cin >> option;
 
         switch (option) // wybór opcji oraz wywolanie odpowiedniego menu
         {
-            case 0:
-                return;
             case 1:
-                graph = NULL;
-                neighbours = NULL;
+                adjency_matrix = NULL;
+                list_of_neighbours = NULL;
                 number_of_vertexes = 0;
                 number_of_edges = 0;
                 create_graph_from_file();
                 break;
             case 2:
-                graph = NULL;
-                neighbours = NULL;
+                adjency_matrix = NULL;
+                list_of_neighbours = NULL;
                 number_of_vertexes = 0;
                 number_of_edges = 0;
                 cout << "Enter the number of vertices in the graph you want to generate: " << endl;
@@ -60,6 +58,8 @@ void MST::MST_menu()
                 print_list_of_neighbours();
                 print_matrix();
                 break;
+            case 8:
+                return;
             default:
                 cout << "Enter correct option" << endl;
                 Sleep(2000);
@@ -85,25 +85,25 @@ void MST::create_graph_from_file()
     file >> number_of_edges >> number_of_vertexes;
 
     //tworzymy liste sasiadow
-    neighbours = new Neighbour *[number_of_vertexes];
+    list_of_neighbours = new Neighbour *[number_of_vertexes];
 
     //tworzymy graf(macierz)
-    graph = new int *[number_of_vertexes];
+    adjency_matrix = new int *[number_of_vertexes];
 
     for (int i = 0; i < number_of_vertexes; i++)
     {
-        graph[i] = new int[number_of_vertexes];
+        adjency_matrix[i] = new int[number_of_vertexes];
     }
     //ustawiamy każdą wartość na null
     for (int i = 0; i < number_of_vertexes; i++)
     {
-        neighbours[i] = NULL;
+        list_of_neighbours[i] = NULL;
     }
     //zerujemy każdą krawędź
     for (int i = 0; i < number_of_vertexes; i++)
     {
         for (int j = 0; j < number_of_vertexes; j++){
-            graph[i][j] = 0;
+            adjency_matrix[i][j] = 0;
         }
     }
 
@@ -112,48 +112,48 @@ void MST::create_graph_from_file()
     {
         file >> v1 >> v2 >> weight;
         p = new Neighbour;
-        p->neighbour = v2;
-        p->next = neighbours[v1];
-        p->weight = weight;
-        neighbours[v1] = p;
+        p->vertex = v2;
+        p->next = list_of_neighbours[v1];
+        p->wage = weight;
+        list_of_neighbours[v1] = p;
 
         p = new Neighbour;
-        p->neighbour = v1;
-        p->next = neighbours[v2];
-        p->weight = weight;
-        neighbours[v2] = p;
+        p->vertex = v1;
+        p->next = list_of_neighbours[v2];
+        p->wage = weight;
+        list_of_neighbours[v2] = p;
 
-        graph[v1][v2] = weight;
-        graph[v2][v1] = weight;
+        adjency_matrix[v1][v2] = weight;
+        adjency_matrix[v2][v1] = weight;
     }
 }
 
 void MST::generate_graph()
 {
     srand(time(NULL));
-    neighbours = new Neighbour *[number_of_vertexes];
+    list_of_neighbours = new Neighbour *[number_of_vertexes];
     int v1, v2, weight;
     int index_from_graph, index_out_graph;
 
     //deklarujemy graf
-    graph = new int *[number_of_vertexes];
+    adjency_matrix = new int *[number_of_vertexes];
 
     //ustawiamy liste
     for (int i = 0; i < number_of_vertexes; i++)
     {
-        graph[i] = new int[number_of_vertexes];
+        adjency_matrix[i] = new int[number_of_vertexes];
     }
     //ustawiamy nulle
     for (int i = 0; i < number_of_vertexes; i++)
     {
-        neighbours[i] = NULL;
+        list_of_neighbours[i] = NULL;
     }
 
     //ustawiamy wartosc zero dla wszystkich krawedzi
     for (int i = 0; i < number_of_vertexes; i++)
     {
         for (int j = 0; j < number_of_vertexes; j++){
-            graph[i][j] = 0;
+            adjency_matrix[i][j] = 0;
         }
             
     }
@@ -192,22 +192,22 @@ void MST::generate_graph()
         sort(outside_graph, outside_graph + number_of_vertexes - i - 1, greater<int>());
 
         //ustawiamy weight
-        graph[v1][v2] = weight;
-        graph[v2][v1] = weight;
+        adjency_matrix[v1][v2] = weight;
+        adjency_matrix[v2][v1] = weight;
 
         //stworzenie nowej listy sasiadow
         p = new Neighbour;
-        p->neighbour = v2;
-        p->next = neighbours[v1];
-        p->weight = weight;
-        neighbours[v1] = p;
+        p->vertex = v2;
+        p->next = list_of_neighbours[v1];
+        p->wage = weight;
+        list_of_neighbours[v1] = p;
 
         //stworzenie nowej listy sasiadow
         p = new Neighbour;
-        p->neighbour = v1;
-        p->next = neighbours[v2];
-        p->weight = weight;
-        neighbours[v2] = p;
+        p->vertex = v1;
+        p->next = list_of_neighbours[v2];
+        p->wage = weight;
+        list_of_neighbours[v2] = p;
     }
     
     //losujemy ilosc krawedzi
@@ -222,7 +222,7 @@ void MST::generate_graph()
 
         //dopoki wylosowal te same wierzcholki lub juz istnieje krawedz pomiedzy nimi
         //to losuje jeszcze raz
-        while (v1 == v2 || graph[v1][v2] != 0)
+        while (v1 == v2 || adjency_matrix[v1][v2] != 0)
         {
             v1 = rand() % number_of_vertexes;
             v2 = rand() % number_of_vertexes;
@@ -232,21 +232,21 @@ void MST::generate_graph()
         weight = rand() % 100 + 1;
 
         //ustawiamy wage
-        graph[v1][v2] = weight;
-        graph[v2][v1] = weight;
+        adjency_matrix[v1][v2] = weight;
+        adjency_matrix[v2][v1] = weight;
 
         //tworzymy liste sasiadow
         p = new Neighbour;
-        p->neighbour = v2;
-        p->next = neighbours[v1];
-        p->weight = weight;
-        neighbours[v1] = p;
+        p->vertex = v2;
+        p->next = list_of_neighbours[v1];
+        p->wage = weight;
+        list_of_neighbours[v1] = p;
 
         p = new Neighbour;
-        p->neighbour = v1;
-        p->next = neighbours[v2];
-        p->weight = weight;
-        neighbours[v2] = p;
+        p->vertex = v1;
+        p->next = list_of_neighbours[v2];
+        p->wage = weight;
+        list_of_neighbours[v2] = p;
     }
 }
 void MST::print_list_of_neighbours()
@@ -254,10 +254,10 @@ void MST::print_list_of_neighbours()
     for (int i = 0; i < number_of_vertexes; i++)
     {
         cout << "\n" << i << " = ";
-        p = neighbours[i];
+        p = list_of_neighbours[i];
         while (p)
         {
-            cout << setw(3) << p->neighbour << ":" << p->weight;
+            cout << setw(3) << p->vertex << ":" << p->wage;
             p = p->next;
         }
     }
@@ -274,14 +274,14 @@ void MST::print_matrix()
     {
         cout << setw(6) << i;
         for (int j = 0; j < number_of_vertexes; j++){
-            cout << setw(6) << graph[i][j];
+            cout << setw(6) << adjency_matrix[i][j];
         }
         cout << endl;
     }
 }
 void MST::print_mst(Edge mst[])
 {
-    cout << "Minimal right spanning tree with weight " << weight << ":\n";
+    cout << "Minimal right spanning tree with weight " << wage << ":\n";
     for (int i = 0; i < number_of_vertexes - 1; i++)
     {
         cout << mst[i].v1 << "-" << mst[i].v2 << ":" << mst[i].weight << "\n";
@@ -297,7 +297,7 @@ void MST::prim_list()
     //pozycja
     position = 0;
     //waga
-    weight = 0;
+    wage = 0;
 
     //deklarujemy kolejke
     Edge *queue = new Edge[number_of_edges];
@@ -318,17 +318,17 @@ void MST::prim_list()
         //ustawiamy na true, poniewaz jestesmy w nim obecnie
         vertexes[v] = true;
         //ustawiamy liste sasiadow
-        p = neighbours[v];
+        p = list_of_neighbours[v];
 
         while (p)
         {
             //jezeli sasiad nie jest odwiedzony
             //to ustawiamy wartosci i dodajemy do kolejki krawedzi
-            if (!vertexes[p->neighbour])
+            if (!vertexes[p->vertex])
             {
                 edge.v1 = v;
-                edge.v2 = p->neighbour;
-                edge.weight = p->weight;
+                edge.v2 = p->vertex;
+                edge.weight = p->wage;
                 add_to_the_queue(edge, queue);
             }
             //przechodzimy do nastepnego
@@ -356,7 +356,7 @@ void MST::prim_list()
             vertexes[edge.v1] = true;
         }
         mst[i] = edge;
-        weight += edge.weight;
+        wage += edge.weight;
     }
     //wyswietlanie drzewa
     //print_mst(mst);
@@ -370,7 +370,7 @@ void MST::prim_matrix()
     //pozycja
     position = 0;
     //waga
-    weight = 0;
+    wage = 0;
 
     //tworzymy kolejke
     Edge *queue = new Edge[number_of_edges];
@@ -396,11 +396,11 @@ void MST::prim_matrix()
             //jezeli wierzcholek nie jest odwiedzony
             //i krawedz ma wartosc
             //to ustawiamy krawedz
-            if (!vertexes[j] && graph[v][j] != 0)
+            if (!vertexes[j] && adjency_matrix[v][j] != 0)
             {
                 edge.v1 = v;
                 edge.v2 = j;
-                edge.weight = graph[v][j];
+                edge.weight = adjency_matrix[v][j];
                 add_to_the_queue(edge, queue);
             }
         }
@@ -427,7 +427,7 @@ void MST::prim_matrix()
         //ustawiamy krawedz
         mst[i] = edge;
         //dodajemy ogolna weight
-        weight += edge.weight;
+        wage += edge.weight;
     }
     //wyswietlamy na ekranie
     //print_mst(mst);
@@ -444,7 +444,7 @@ void MST::kruskal_list()
     //tworzymy drzewo. które będzie tablicą krawedzi
     Edge *mst = new Edge[number_of_vertexes - 1];
     //ustawiamy weight na 0
-    weight = 0;
+    wage = 0;
     //ustawiamy pozycje na 0
     position = 0;
 
@@ -458,19 +458,19 @@ void MST::kruskal_list()
     for (int i = 0; i < number_of_vertexes; i++)
     {
         //ustawiamy p jako pierwszego sasiada wierzcholka i
-        p = neighbours[i];
+        p = list_of_neighbours[i];
 
         //dopoki istnieje sasiad
         while (p)
         {
             //nie bedzie powtorzen poniewaz sprawdzamy obecny indeks z indeksem sasiada
             //sasiedzi ida w dol wiec dlatego dajemy warunek w gore
-            if (p->neighbour >= i)
+            if (p->vertex >= i)
             {
                 //nastepnie ustawiamy krawedz i dodajemy do kolejki
                 edge.v1 = i;
-                edge.v2 = p->neighbour;
-                edge.weight = p->weight;
+                edge.v2 = p->vertex;
+                edge.weight = p->wage;
                 add_to_the_queue(edge, queue);
             }
             //idziemy do sasiada
@@ -489,7 +489,7 @@ void MST::kruskal_list()
 
         mst[i] = edge;
         connect_datasets(edge);
-        weight += edge.weight;
+        wage += edge.weight;
     }
     //print_mst(mst); 
 }
@@ -504,7 +504,7 @@ void MST::kruskal_matrix()
     //tworzymy drzewo
     Edge *mst = new Edge[number_of_vertexes - 1];
     //ustawiamy weight na 0
-    weight = 0;
+    wage = 0;
     //ustawiamy pozycje na 0
     position = 0;
     //dla kazdego wierzcholka tworzymy zbior
@@ -520,11 +520,11 @@ void MST::kruskal_matrix()
         {
             //jezeli istnieje krawedz
             //to ustawiamy wartosci i dodajemy do kolejki
-            if (graph[i][j] != 0)
+            if (adjency_matrix[i][j] != 0)
             {
                 edge.v1 = i;
                 edge.v2 = j;
-                edge.weight = graph[i][j];
+                edge.weight = adjency_matrix[i][j];
                 add_to_the_queue(edge, queue);
             }
         }
@@ -539,7 +539,7 @@ void MST::kruskal_matrix()
 
         mst[i] = edge;
         connect_datasets(edge);
-        weight += edge.weight;
+        wage += edge.weight;
     }
     //print_mst(mst);
 }
@@ -721,100 +721,4 @@ void MST::connect_datasets(Edge edge)
             }
         }
     }
-}
-
-void MST::measure_time() {
-    int data[10][2] = {{80, 80}, {40, 20}, {40, 40}, {40, 80}, {40, 99}, {80, 10}, {80, 20}, {80, 40}, {80, 80}, {80, 99}};
-    for(int j=0;j<10;j++){
-
-        cout << "j: "<<j<<endl;
-        number_of_vertexes = data[j][0];
-        density = data[j][1];
-        fstream file_out;    
-        string filename = "Prim_List_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
-
-        try{
-        
-        file_out.open(filename, ios::out);
-        srand(time(NULL));
-        cout << "przed petla" <<endl;
-        for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
-        {
-            generate_graph();
-            auto begin = std::chrono::steady_clock::now();
-            prim_list();
-            auto end = std::chrono::steady_clock::now();
-            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
-        }
-        cout << "prim list"<<endl;
-        delete graph;
-        delete neighbours;
-        delete p;
-        delete datasets;
-        file_out.close();}
-        catch(error_code r){
-            cout << r <<endl;
-        }
-        /////////////////////////////////
-        filename = "Prim_Matrix_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
-        file_out.open(filename, ios::out);
-        for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
-        {
-            generate_graph();
-            auto begin = std::chrono::steady_clock::now();
-            prim_matrix();
-            auto end = std::chrono::steady_clock::now();
-            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
-        }
-        cout << "prim matrix"<<endl;
-        delete graph;
-        delete neighbours;
-        delete p;
-        delete datasets;
-        file_out.close();
-        ///////////////////////////////////
-        try{filename = "Kruskal_List_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
-        file_out.open(filename, ios::out);
-        for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
-        {
-            generate_graph();
-            auto begin = std::chrono::steady_clock::now();
-            kruskal_list();
-            auto end = std::chrono::steady_clock::now();
-            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
-        }
-        cout << "kruskal list" <<endl;
-        delete graph;
-        delete neighbours;
-        delete p;
-        delete datasets;
-        file_out.close();
-        }
-        catch(error_code r){
-            cout << r <<endl;
-        }
-        ////////////////////////////////////
-        try{
-            filename = "Kruskal_Matrix_"+to_string(number_of_vertexes)+"_"+ to_string(density)+".txt";
-        file_out.open(filename, ios::out);
-        for(int i = 0; i < 50; i++)                                                                //pomiar czasu operacji
-        {
-            generate_graph();
-            auto begin = std::chrono::steady_clock::now();
-            kruskal_matrix();
-            auto end = std::chrono::steady_clock::now();
-            file_out << std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin).count() << "\n";
-            
-        }
-        cout << "kruskal matrix" <<endl;
-        delete graph;
-        delete neighbours;
-        delete p;
-        delete datasets;
-        file_out.close();
-        }catch(error_code r){
-            cout << r<<endl;
-        }
-    }
-    cout << "Ended"<<endl;
 }

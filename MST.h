@@ -15,20 +15,20 @@ public:
     };
     struct Neighbour{
         Neighbour *next;
-        int neighbour;
-        int weight;
+        int vertex;
+        int wage;
     };
     struct Datasets{
         int root, power;
     };
 
-    Neighbour ** neighbours;
+    Neighbour ** list_of_neighbours;
     Neighbour *p;
 
     Datasets *datasets;
-    int ** graph;
+    int ** adjency_matrix;
     int number_of_edges, number_of_vertexes, position;
-    int weight;
+    int wage;
     int density;
 
     void MST_menu();
